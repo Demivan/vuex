@@ -7,15 +7,16 @@ type MutationMethod = (...args: any[]) => void;
 type ActionMethod = (...args: any[]) => Promise<any>;
 
 type Unionize<T> = {[P in keyof T]: {[Q in P]: T[P]}}[keyof T];
+type UnionizeDict<Key extends string, Value> = Unionize<{[key in Key]: Value}>
 
 interface Mapper<R> {
-  <T extends Dictionary<R>, K extends keyof T>(map: K[]): Pick<T, K>;
-  <T extends Dictionary<R>, K extends keyof T>(map: Dictionary<K>): Pick<T, K>;
+  <T extends Dictionary<string>, K extends keyof T>(map: K[]): UnionizeDict<K, R>;
+  <T extends Dictionary<string>, K extends keyof T>(map: T): UnionizeDict<K, R>;
 }
 
 interface MapperWithNamespace<R> {
-  <T extends Dictionary<R>, K extends keyof T>(namespace: string, map: K[]): Pick<T, K>;
-  <T extends Dictionary<R>, K extends keyof T>(namespace: string, map: Dictionary<K>): Pick<T, K>;
+  <T extends Dictionary<string>, K extends keyof T>(namespace: string, map: K[]): UnionizeDict<K, R>;
+  <T extends Dictionary<string>, K extends keyof T>(namespace: string, map: T): UnionizeDict<K, R>;
 }
 
 interface FunctionMapper<F, R> {

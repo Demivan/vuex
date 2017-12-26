@@ -138,9 +138,31 @@ new Vue({
         commit('m', value)
       }
     }),
+    helpers.mapMutations({
+      n: "n",
+      m: "m"
+    }),
 
     {
       otherMethod () {}
     }
   )
 });
+
+const actions = mapActions({
+  mAlias: "m"
+})
+
+actions.mAlias()
+
+const actionsNamespaced = mapActions('namespace', {
+  mAlias: "m"
+})
+
+actionsNamespaced.mAlias()
+
+const actionsNamespaced2 = helpers.mapActions({
+  mAlias: "m"
+})
+
+actionsNamespaced2.mAlias()
