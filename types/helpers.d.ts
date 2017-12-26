@@ -20,27 +20,27 @@ interface MapperWithNamespace<R> {
 }
 
 interface FunctionMapper<F, R> {
-  <T extends Dictionary<(this: typeof Vue, fn: F, ...args: any[]) => any>, K extends keyof T>(map: T): Unionize<{[key in K]: R}>;
+  <T extends Dictionary<(this: typeof Vue, fn: F, ...args: any[]) => any>, K extends keyof T>(map: T): UnionizeDict<K, R>;
 }
 
 interface FunctionMapperWithNamespace<F, R> {
   <T extends Dictionary<(this: typeof Vue, fn: F, ...args: any[]) => any>, K extends keyof T>(
     namespace: string,
     map: T
-  ): Unionize<{[key in K]: R}>;
+  ): UnionizeDict<K, R>;
 }
 
 interface MapperForState {
   <S, T extends Dictionary<(this: typeof Vue, state: S, getters: any) => any>, K extends keyof T>(
     map: T
-  ): Unionize<{[key in K]: Computed}>;
+  ): UnionizeDict<K, Computed>;
 }
 
 interface MapperForStateWithNamespace {
   <S, T extends Dictionary<(this: typeof Vue, state: S, getters: any) => any>, K extends keyof T>(
     namespace: string,
     map: T
-  ): Unionize<{[key in K]: Computed}>;
+  ): UnionizeDict<K, Computed>;
 }
 
 interface NamespacedMappers {
