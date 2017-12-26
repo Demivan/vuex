@@ -7,13 +7,13 @@ type MutationMethod = (...args: any[]) => void;
 type ActionMethod = (...args: any[]) => Promise<any>;
 
 interface Mapper<R> {
-  (map: string[]): Dictionary<R>;
-  (map: Dictionary<string>): Dictionary<R>;
+  <T extends Dictionary<R>, K extends keyof T>(map: K[]): Pick<T, K>;
+  <T extends Dictionary<R>, K extends keyof T>(map: Dictionary<K>): Pick<T, K>;
 }
 
 interface MapperWithNamespace<R> {
-  (namespace: string, map: string[]): Dictionary<R>;
-  (namespace: string, map: Dictionary<string>): Dictionary<R>;
+  <T extends Dictionary<R>, K extends keyof T>(namespace: string, map: K[]): Pick<T, K>;
+  <T extends Dictionary<R>, K extends keyof T>(namespace: string, map: Dictionary<K>): Pick<T, K>;
 }
 
 interface FunctionMapper<F, R> {
