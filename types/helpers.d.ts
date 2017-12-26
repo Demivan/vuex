@@ -4,7 +4,7 @@ import { Dispatch, Commit } from './index';
 type Dictionary<T> = { [key: string]: T };
 type Computed = () => any;
 type MutationMethod = (...args: any[]) => void;
-type ActionMethod = (...args: any[]) => (Promise<any> | void);
+type ActionMethod = (...args: any[]) => Promise<any>;
 
 type Unionize<T> = {[P in keyof T]: {[Q in P]: T[P]}}[keyof T];
 
@@ -19,14 +19,14 @@ interface MapperWithNamespace<R> {
 }
 
 interface FunctionMapper<F, R> {
-  <T extends Dictionary<R>, K extends keyof T>(map: T): Unionize<{[key in K]: (this: typeof Vue, fn: F, ...args: any[]) => any}>;
+  <T extends Dictionary<(this: typeof Vue, fn: F, ...args: any[]) => any>, K extends keyof T>(map: T): Unionize<{[key in K]: R}>;
 }
 
 interface FunctionMapperWithNamespace<F, R> {
-  <T extends Dictionary<R>, K extends keyof T>(
+  <T extends Dictionary<(this: typeof Vue, fn: F, ...args: any[]) => any>, K extends keyof T>(
     namespace: string,
     map: T
-  ): Unionize<{[key in K]: (this: typeof Vue, fn: F, ...args: any[]) => any}>;
+  ): Unionize<{[key in K]: R}>;
 }
 
 interface MapperForState {
