@@ -14,58 +14,41 @@ interface Mapper<R> {
   <T extends Dictionary<string>, K extends keyof T>(map: T): UnionizeDict<K, R>;
 }
 
+interface MapperWithFunc<R, TMapFunc> {
+  <T extends Dictionary<string>, K extends keyof T>(map: K[]): UnionizeDict<K, R>;
+  <T extends Dictionary<string|TMapFunc>, K extends keyof T>(map: T): UnionizeDict<K, R>;
+}
+
 interface MapperWithNamespace<R> {
   <T extends Dictionary<string>, K extends keyof T>(namespace: string, map: K[]): UnionizeDict<K, R>;
   <T extends Dictionary<string>, K extends keyof T>(namespace: string, map: T): UnionizeDict<K, R>;
 }
 
-interface FunctionMapper<F, R> {
-  <T extends Dictionary<(this: typeof Vue, fn: F, ...args: any[]) => any>, K extends keyof T>(map: T): UnionizeDict<K, R>;
+interface MapperWithFuncWithNamespace<R, TMapFunc> {
+  <T extends Dictionary<string>, K extends keyof T>(namespace: string, map: K[]): UnionizeDict<K, R>;
+  <T extends Dictionary<string|TMapFunc>, K extends keyof T>(namespace: string, map: T): UnionizeDict<K, R>;
 }
 
-interface FunctionMapperWithNamespace<F, R> {
-  <T extends Dictionary<(this: typeof Vue, fn: F, ...args: any[]) => any>, K extends keyof T>(
-    namespace: string,
-    map: T
-  ): UnionizeDict<K, R>;
-}
-
-interface MapperForState {
-  <S, T extends Dictionary<(this: typeof Vue, state: S, getters: any) => any>, K extends keyof T>(
-    map: T
-  ): UnionizeDict<K, Computed>;
-}
-
-interface MapperForStateWithNamespace {
-  <S, T extends Dictionary<(this: typeof Vue, state: S, getters: any) => any>, K extends keyof T>(
-    namespace: string,
-    map: T
-  ): UnionizeDict<K, Computed>;
-}
+type GenericMapFunction<F> = (this: typeof Vue, fn: F, ...args: any[]) => any
+type StateMapFunction = <S>(this: typeof Vue, state: S, getters: any) => any
 
 interface NamespacedMappers {
-  mapState: Mapper<Computed> & MapperForState;
-  mapMutations: Mapper<MutationMethod> & FunctionMapper<Commit, MutationMethod>;
+  mapState: MapperWithFunc<Computed, StateMapFunction>;
+  mapMutations: MapperWithFunc<MutationMethod, GenericMapFunction<Commit>>;
   mapGetters: Mapper<Computed>;
-  mapActions: Mapper<ActionMethod> & FunctionMapper<Dispatch, ActionMethod>;
+  mapActions: MapperWithFunc<ActionMethod, GenericMapFunction<Dispatch>>;
 }
 
-export declare const mapState: Mapper<Computed>
-  & MapperWithNamespace<Computed>
-  & MapperForState
-  & MapperForStateWithNamespace;
+export declare const mapState: MapperWithFunc<Computed, StateMapFunction>
+  & MapperWithFuncWithNamespace<Computed, StateMapFunction>;
 
-export declare const mapMutations: Mapper<MutationMethod>
-  & MapperWithNamespace<MutationMethod>
-  & FunctionMapper<Commit, MutationMethod>
-  & FunctionMapperWithNamespace<Commit, MutationMethod>;
+export declare const mapMutations: MapperWithFunc<MutationMethod, GenericMapFunction<Commit>>
+  & MapperWithFuncWithNamespace<MutationMethod, GenericMapFunction<Commit>>;
 
 export declare const mapGetters: Mapper<Computed>
   & MapperWithNamespace<Computed>;
 
-export declare const mapActions: Mapper<ActionMethod>
-  & MapperWithNamespace<ActionMethod>
-  & FunctionMapper<Dispatch, ActionMethod>
-  & FunctionMapperWithNamespace<Dispatch, ActionMethod>;
+export declare const mapActions: MapperWithFunc<ActionMethod, GenericMapFunction<Dispatch>>
+  & MapperWithFuncWithNamespace<ActionMethod, GenericMapFunction<Dispatch>>;
 
 export declare function createNamespacedHelpers(namespace: string): NamespacedMappers;

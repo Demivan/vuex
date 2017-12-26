@@ -156,7 +156,13 @@ const actions = mapActions({
 actions.mAlias()
 
 const actionsNamespaced = mapActions('namespace', {
-  mAlias: "m"
+  mAlias: "m",
+  customFuncArrow: (dispatch, param) => {
+    dispatch('m')
+  },
+  customFunc (dispatch, param) {
+    dispatch('m')
+  }
 })
 
 actionsNamespaced.mAlias()
@@ -166,3 +172,19 @@ const actionsNamespaced2 = helpers.mapActions({
 })
 
 actionsNamespaced2.mAlias()
+
+const actionsNamespaced3 = mapActions({
+  mAlias (dispatch, param) {
+    dispatch('m')
+  }
+})
+
+actionsNamespaced3.mAlias()
+
+const actionsNamespaced4 = mapActions('namespace', {
+  mAlias: function (dispatch, param) {
+    dispatch('m')
+  }
+})
+
+actionsNamespaced4.mAlias()
