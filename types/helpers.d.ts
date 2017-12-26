@@ -30,16 +30,16 @@ interface FunctionMapperWithNamespace<F, R> {
 }
 
 interface MapperForState {
-  <S>(
-    map: Dictionary<(this: typeof Vue, state: S, getters: any) => any>
-  ): Dictionary<Computed>;
+  <S, T extends Dictionary<(this: typeof Vue, state: S, getters: any) => any>, K extends keyof T>(
+    map: T
+  ): Unionize<{[key in K]: Computed}>;
 }
 
 interface MapperForStateWithNamespace {
-  <S>(
+  <S, T extends Dictionary<(this: typeof Vue, state: S, getters: any) => any>, K extends keyof T>(
     namespace: string,
-    map: Dictionary<(this: typeof Vue, state: S, getters: any) => any>
-  ): Dictionary<Computed>;
+    map: T
+  ): Unionize<{[key in K]: Computed}>;
 }
 
 interface NamespacedMappers {
